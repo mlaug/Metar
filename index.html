@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/media.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="javascript/annotater.js"></script>
+        <script type="text/javascript">  
+            $(document).ready(function(){
+                $('.ml-annotate').annotate();
+            });
+        </script>
+    </head>
+    <body>
+        <div class="mockupbox ml-annotate" data-annotate="mockup" style="">
+
+            The Text which should be explained
+
+        </div>
+
+        <div class="ml-annotation" id="ml-annotation-mockup">
+
+            The Text to explain
+
+        </div>  
+    </body>
+</html>
