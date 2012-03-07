@@ -3,7 +3,14 @@
  * @author Matthias Laug <laug@lieferando.de
  * @since 06.03.2012
  */
-(function($) {
+(function($) {   
+    
+    /**
+     * initial function to 
+     *
+     * @author Matthias Laug
+     * @since 07.03.2012
+     */
     $.fn.annotate = function() {
         
         $('.ml-annotation').hide();
@@ -23,15 +30,36 @@
         });
     };
     
+    /**
+     * append a toolbox to the mask element
+     *
+     * @author Matthias Laug
+     * @since 07.03.2012
+     */
     $.fn.toolbox = function() {
         if ( $('#ml-annotate-toolbox',this).length == 0 ){
-            this.append('<div id="ml-annotate-toolbox">\n\
-                            <a class="ml-like">like</a>\n\
-                            <a class="ml-dislike">dislike</a>\n\
-                            <a class="ml-remove">remove</a>\n\
-                            <a class="ml-comment">comment</a>\n\
+            this.append('<div class="ml-annotate-toolbox">\n\
+                            <a class="ml-do-annotate ml-like">like</a>\n\
+                            <a class="ml-do-annotate ml-dislike">dislike</a>\n\
+                            <a class="ml-do-annotate ml-remove">remove</a>\n\
+                            <a class="ml-do-annotate ml-comment">comment</a>\n\
                         </div>');
+            
+            $('.ml-do-annotate').live('click', function(){
+                $(this).sendInformationToServer();
+            });
         }      
+    }
+    
+    $.fn.sendInformationToServer = function () {
+        $.ajax({
+            url : 'reporting.php',
+            type : 'POST',
+            dataType : 'json',
+            success : function(){
+                
+            }
+        });
     }
     
 })(jQuery);
