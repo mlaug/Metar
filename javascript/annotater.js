@@ -45,11 +45,11 @@
      */
     $.fn.createAnnotaterToolbox = function() {
         
-        this.append('<div class="ml-annotate-toolbox">\n\
-                        <a class="ml-do-annotate ml-like" data-action="like">like</a>\n\
-                        <a class="ml-do-annotate ml-dislike" data-action="dislike">dislike</a>\n\
-                        <a class="ml-do-annotate ml-remove" data-action="remove">remove</a>\n\
-                        <a class="ml-do-annotate ml-comment">comment</a>\n\
+        this.append('<div class="ml-annotate-toolbox"><ul>\n\
+                        <li><a class="ml-do-annotate ml-like" data-action="like">like</a></li>\n\
+                        <li><a class="ml-do-annotate ml-dislike" data-action="dislike">dislike</a></li>\n\
+                        <li><a class="ml-do-annotate ml-remove" data-action="remove">remove</a></li>\n\
+                        <li><a class="ml-do-annotate ml-comment">comment</a></li></ul>\n\
                     </div>\n\
                     <div class="ml-dialog-comment" style="display:none">\n\
                         <textarea cols="30" rows="10" name="comment"></textarea>\n\
