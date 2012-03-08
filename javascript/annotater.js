@@ -1,12 +1,18 @@
 /**
- * Annotation
- * @author Matthias Laug <laug@lieferando.de
- * @since 06.03.2012
+ * Copyright (c) 2012 Matthias Laug (matthias.laug@gmail.com)
+ * 
+ * licensed under the GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+ *  
+ * 
+ *
  */
+
 (function($) {   
     
+    var annotater = null;
+    
     /**
-     * initial function to 
+     * initial function to add annoation hover handler
      *
      * @author Matthias Laug
      * @since 07.03.2012
@@ -18,9 +24,10 @@
         return this.each(function(){
 
             //put live click event on each element, which can be annotated
-            $(this).live('mouseenter', function(){
+            $(this).live('mouseenter', function(){ 
+                annotater = this;
                 var annotation = $(this).attr('data-annotate');
-                $(this).mask($('#ml-annotation-' + annotation).html()).toolbox();
+                $(this).mask($('#ml-annotation-' + annotation).html()).createAnnotaterToolbox();   
             });
             
             $(this).live('mouseleave', function(){
@@ -36,27 +43,57 @@
      * @author Matthias Laug
      * @since 07.03.2012
      */
-    $.fn.toolbox = function() {
-        if ( $('#ml-annotate-toolbox',this).length == 0 ){
-            this.append('<div class="ml-annotate-toolbox">\n\
-                            <a class="ml-do-annotate ml-like">like</a>\n\
-                            <a class="ml-do-annotate ml-dislike">dislike</a>\n\
-                            <a class="ml-do-annotate ml-remove">remove</a>\n\
-                            <a class="ml-do-annotate ml-comment">comment</a>\n\
-                        </div>');
+    $.fn.createAnnotaterToolbox = function() {
+        
+        this.append('<div class="ml-annotate-toolbox">\n\
+                        <a class="ml-do-annotate ml-like" data-action="like">like</a>\n\
+                        <a class="ml-do-annotate ml-dislike" data-action="dislike">dislike</a>\n\
+                        <a class="ml-do-annotate ml-remove" data-action="remove">remove</a>\n\
+                        <a class="ml-do-annotate ml-comment">comment</a>\n\
+                    </div>\n\
+                    <div class="ml-dialog-comment" style="display:none">\n\
+                        <textarea cols="30" rows="10" name="comment"></textarea>\n\
+                        <a class="ml-do-annotate ml-comment-do" data-action="comment">send</a>\n\
+                    </div>');
             
+        if ( !$(annotater).data('toolbox') ){
+            $(annotater).data('toolbox',true);
             $('.ml-do-annotate').live('click', function(){
-                $(this).sendInformationToServer();
-            });
-        }      
+                if ( $(this).hasClass('ml-comment') ){
+                    var position = $(this).position();
+                    $('.ml-dialog-comment').dialog({
+                        draggable : false,
+                        resizable : false,
+                        title : 'Commentbox',
+                        position: [position.left, position.top]
+                    });
+                }
+                else{
+                    $('.ml-dialog-comment').dialog('close'); //close dialog if any
+                    $(this).sendInformationToServer();
+                }
+            });         
+        } 
+          
     }
-    
+       
+    /**
+     * send information to server and store as xml
+     *
+     * @author Matthias Laug
+     * @since 08.03.2012
+     */
     $.fn.sendInformationToServer = function () {
         $.ajax({
             url : 'reporting.php',
             type : 'POST',
             dataType : 'json',
-            success : function(){
+            data : {
+                action : this.attr('data-action'),
+                element : $(annotater).attr('data-annotate'),
+                comment : $(':input[name="comment"]').val()
+            },
+            success : function(json){
                 
             }
         });
