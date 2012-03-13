@@ -26,8 +26,15 @@
             //put live click event on each element, which can be annotated
             $(this).live('mouseenter', function(){ 
                 annotater = this;
-                var annotation = $(this).attr('data-annotate');
-                $(this).mask($('#ml-annotation-' + annotation).html()).createAnnotaterToolbox();   
+                    
+                //already annotated, just show information
+                if ( $(annotater).data('like') || $(annotater).data('dislike') ){
+                    
+                }
+                else{
+                    var annotation = $(this).attr('data-annotate');
+                    $(this).mask($('#ml-annotation-' + annotation).html()).createAnnotaterToolbox();   
+                }
             });
             
             $(this).live('mouseleave', function(){
@@ -55,11 +62,11 @@
                         <textarea cols="30" rows="10" name="comment"></textarea>\n\
                         <a class="ml-do-annotate ml-comment-do" data-action="comment">send</a>\n\
                     </div>');
-            
+        
         if ( !$(annotater).data('toolbox') ){
             $(annotater).data('toolbox',true);
             $('.ml-do-annotate').live('click', function(){
-                if ( $(this).hasClass('ml-comment') ){
+                if ( $(this).hasClass('ml-comment') ){ //this is a comment
                     var position = $(this).position();
                     $('.ml-dialog-comment').dialog({
                         draggable : false,
@@ -84,6 +91,7 @@
      * @since 08.03.2012
      */
     $.fn.sendInformationToServer = function () {
+        var $this = this;
         $.ajax({
             url : 'reporting.php',
             type : 'POST',
@@ -94,9 +102,27 @@
                 comment : $(':input[name="comment"]').val()
             },
             success : function(json){
+                $(annotater).data($this.attr('data-action'), true);
                 
+                if ( $this.attr('data-action') == 'remove' ){
+                    $(annotater).remove();
+                }
+                
+                //TODO: store that information into html5 storage for restore on reload
             }
         });
+    }
+    
+    /**
+     * restore user preference from html5 store
+     *
+     * @author Matthias Laug
+     * @since 13.03.2012
+     */
+    $.fn.restoreUserPreference = function () {
+        //remove unwated elements
+        
+        //what to do with dislike and likes? rearrange? golden broder? :)
     }
     
 })(jQuery);
